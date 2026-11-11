@@ -1,45 +1,51 @@
 """Writes profile/banner-light.svg and profile/banner-dark.svg (the org page's "Coming soon" block).
 
-Brand combos from the Proxify brand file: Soft (light) and Hero (dark). Run: python3 scripts/make_banner.py
+Layout follows the proxify-dev org banners: transparent background, title block on the left,
+a dotted field with a window on the right. Logos are the brand PNGs in assets/, embedded.
+Run: python3 scripts/make_banner.py
 """
+import base64
 from pathlib import Path
 
-MARK = [
-    "M39.1938 78.3876C60.8415 78.3876 78.3876 60.8359 78.3876 39.1938C78.3876 17.5517 60.8415 0 39.1938 0C17.5461 0 0 17.5517 0 39.1938C0 60.8359 17.5461 78.3876 39.1938 78.3876Z",
-    "M82.3179 9.79611C85.2571 44.8074 113.176 72.7425 148.204 75.6822C151.574 75.9651 154.326 73.1962 154.326 69.8139V9.79845C154.326 6.41624 151.584 3.67442 148.202 3.67442H88.186C84.8038 3.67442 82.0349 6.42576 82.3179 9.79611Z",
-    "M158 118.8C158 140.451 140.454 158 118.806 158C97.1585 158 79.6124 140.439 79.6124 118.8C79.6124 97.1613 97.1585 79.6124 118.806 79.6124C140.454 79.6124 158 97.1489 158 118.8Z",
-    "M10.4109 87.5736C7.02864 87.5736 4.28682 90.3155 4.28682 93.6977V147.589C4.28682 150.971 7.02864 153.713 10.4109 153.713H64.3023C67.6845 153.713 70.4264 150.971 70.4264 147.589V93.6977C70.4264 90.3155 67.6845 87.5736 64.3023 87.5736H10.4109Z",
-]
-THEMES = {
-    "light": {"bg": "#F4F5F7", "border": "#EAECF0", "fg": "#15172F", "accent": "#5258FB", "muted": "#475467", "deco": 0.10},
-    "dark": {"bg": "#15172F", "border": "#262841", "fg": "#FFFFFF", "accent": "#999AFD", "muted": "#D0D5DD", "deco": 0.16},
-}
+ROOT = Path(__file__).resolve().parent.parent
+W, H = 1280, 320
 FONT = "Inter, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
-W, H = 1280, 360
+THEMES = {
+    # light banner sits on GitHub's white page: dark logo; dark banner on GitHub dark: light logo
+    "light": {"logo": "proxify-logo-dark.png", "fg": "#15172F", "dot": "#5258FB", "dot_op": 0.4,
+              "win": "#F4F5F7", "win_line": "#D0D5DD", "lights": "#D0D5DD", "cursor": "#15172F", "bar": "#5258FB"},
+    "dark": {"logo": "proxify-logo-light.png", "fg": "#FFFFFF", "dot": "#6369FF", "dot_op": 0.55,
+             "win": "#1D2939", "win_line": "#1D2939", "lights": "#475467", "cursor": "#FFFFFF", "bar": "#999AFD"},
+}
 
 
-def mark(x, y, size, fill, opacity=1.0):
-    s = size / 158
-    paths = "".join(f'<path d="{d}"/>' for d in MARK)
-    return f'<g transform="translate({x} {y}) scale({s:.4f})" fill="{fill}" fill-opacity="{opacity}">{paths}</g>'
+def dots(t):
+    out = []
+    for x in range(560, 1270, 24):
+        for y in range(8, 312, 24):
+            if 596 <= x <= 1244 and 36 <= y <= 284:  # hidden behind the window
+                continue
+            out.append(f'<circle cx="{x}" cy="{y}" r="1.6"/>')
+    return f'<g fill="{t["dot"]}" fill-opacity="{t["dot_op"]}">{"".join(out)}</g>'
 
 
 def banner(t):
-    return f"""<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Proxify Hackathons. Coming soon">
-  <defs><clipPath id="c"><rect x="1" y="1" width="{W-2}" height="{H-2}" rx="20"/></clipPath></defs>
-  <rect x="1" y="1" width="{W-2}" height="{H-2}" rx="20" fill="{t['bg']}" stroke="{t['border']}" stroke-width="2"/>
-  <g clip-path="url(#c)">{mark(860, 30, 440, t['accent'], t['deco'])}</g>
-  {mark(72, 72, 56, t['fg'])}
+    logo = base64.b64encode((ROOT / "assets" / t["logo"]).read_bytes()).decode()
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Proxify Hackathons. Coming soon">
+  {dots(t)}
+  <rect x="600" y="40" width="640" height="240" rx="12" fill="{t['win']}" stroke="{t['win_line']}" stroke-width="1"/>
+  <g fill="{t['lights']}"><circle cx="620" cy="58" r="5"/><circle cx="638" cy="58" r="5"/><circle cx="656" cy="58" r="5"/></g>
+  <rect x="624" y="88" width="10" height="20" fill="{t['cursor']}"><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.5;1" dur="1.1s" repeatCount="indefinite"/></rect>
+  <image x="56" y="76" width="200" height="48" href="data:image/png;base64,{logo}" xlink:href="data:image/png;base64,{logo}"/>
   <g font-family="{FONT}">
-    <text x="144" y="109" font-size="22" font-weight="600" fill="{t['fg']}">Proxify Hackathons</text>
-    <text x="68" y="248" font-size="104" font-weight="600" letter-spacing="-3" fill="{t['fg']}">Coming soon</text>
-    <rect x="72" y="282" width="120" height="6" rx="3" fill="{t['accent']}"/>
+    <text x="53" y="222" font-size="80" font-weight="500" letter-spacing="-1.5" fill="{t['fg']}">Coming soon</text>
   </g>
+  <rect x="56" y="250" width="96" height="4" rx="2" fill="{t['bar']}"/>
 </svg>
 """
 
 
-out = Path(__file__).resolve().parent.parent / "profile"
 for name, theme in THEMES.items():
-    (out / f"banner-{name}.svg").write_text(banner(theme))
-    print("wrote", out / f"banner-{name}.svg")
+    path = ROOT / "profile" / f"banner-{name}.svg"
+    path.write_text(banner(theme))
+    print("wrote", path)
