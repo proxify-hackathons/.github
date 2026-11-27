@@ -27,7 +27,7 @@ All times CET.
 | **December 9–14** | Scoring. We score every entry. |
 | **Monday, December 14, 12:00** | Results. We publish the winners, and you see your own score and feedback. |
 
-Questions? Ask in the #hackathon channel in the network Slack.
+Questions? Ask in the [#hackathon-2026](https://proxify.slack.com/archives/C0CM2646JDD) channel in the network Slack.
 
 ---
 
