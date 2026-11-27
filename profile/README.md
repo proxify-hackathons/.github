@@ -9,9 +9,11 @@ A five-day solo hackathon for developers in the Proxify network. Pick one of two
 ### The challenges
 
 **Learning paths**
+
 Build a service that takes a developer's current skills and a goal, such as a role, a project or a new stack, and returns a personal learning path they can work through step by step. You build it with coding agents, in a stack outside your own.
 
 **Agent that learns**
+
 Give your coding agent a memory for a project, so you never say the same thing twice. You build it as a Claude Code plugin: it keeps what was agreed and why, ends a rule when it stops applying, and brings the right part back at the right moment in a later session.
 
 ### Timeline
