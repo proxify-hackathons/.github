@@ -1,4 +1,4 @@
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/proxify-hackathons/.github/main/profile/banner-dark.svg?v=3"><img src="https://raw.githubusercontent.com/proxify-hackathons/.github/main/profile/banner-light.svg?v=3" alt="Proxify Hackathons. Apply now" width="100%"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/proxify-hackathons/.github/main/profile/banner-dark.svg?v=4"><img src="https://raw.githubusercontent.com/proxify-hackathons/.github/main/profile/banner-light.svg?v=4" alt="Proxify Hackathons. Agentic Engineering with Proxify" width="100%"></picture>
 
 ## Agentic Engineering with Proxify
 
